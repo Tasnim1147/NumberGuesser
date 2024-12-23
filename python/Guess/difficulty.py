@@ -1,13 +1,11 @@
 from enum import Enum
-from typing import Final
 from math import log2, ceil, floor
 
 class GuessDifficulty(Enum):
 
-    EASY: Final = lambda size: ceil(size/2)
-    HARD: Final =  lambda size: floor(log2(size)) if size > 1 else size
-    MEDIUM: Final = lambda size: min((GuessDifficulty.EASY(size) + 
-                                      GuessDifficulty.HARD(size)) // 2, size)
+    EASY: str = "easy"
+    MEDIUM: str = "medium"
+    HARD: str = "hard"
 
     def __str__(self):
         return self.value
@@ -15,10 +13,10 @@ class GuessDifficulty(Enum):
     def __call__(self,
                  size: int
                  ) -> int:
-        if (self == GuessDifficulty.EASY or
-            self == GuessDifficulty.MEDIUM or
-            self == GuessDifficulty.HARD):
-            return self.value(size)
+        if (self == GuessDifficulty.EASY): return ceil(size/ 2)
+        elif (self == GuessDifficulty.HARD): return floor(log2(size)) if size > 1 else size
+        elif (self == GuessDifficulty.MEDIUM):
+            return (self.EASY(size) + self.HARD(size)) // 2
         else:
             raise ValueError(f"Invalid difficulty type: {self}")
         
@@ -33,4 +31,6 @@ if __name__ == "__main__":
         b = fmed(size)
         c = fhard(size)
         assert(a >= b >= c)
+
+    print(GuessDifficulty["EASY"])
             
