@@ -36,7 +36,9 @@ class GuessCLI(Cmd):
     def precmd(self, 
                line: str
                ) -> str:
-        line = str(self.state) + line
+        
+        if "help" not in line and "exit" not in line: 
+            line = str(self.state) + line
         return super().precmd(line)
     
     def promptDifficulty(self):
@@ -45,9 +47,15 @@ class GuessCLI(Cmd):
             print(f"{idx + 1}. {diff} ({diff(100)}) choices")
 
     def do_exit(self, 
-                arg: str
+                arg: str = ""
                 ) -> bool:
+        print("Exiting CLI...")
         return True
+    
+    def do_help(self, arg):
+        """This is not an usual CLI"""
+        return super().do_help(arg)
+    
     
     def do_guess(self,
                  arg: str
@@ -57,10 +65,10 @@ class GuessCLI(Cmd):
             res = self.manager.guess(guess)
             if res == gs.WIN:
                 print(f"Congratulations! You guessed the correct number in {self.manager.getGuessCount()} attempts.")
-                return True
+                return self.do_exit()
             elif res == gs.LOSS:
                 print(f"Alas! No more attempt left.")
-                return True
+                return self.do_exit()
             else:
                 print(f"Incorrect! The number is {res} than {guess}.")
 
