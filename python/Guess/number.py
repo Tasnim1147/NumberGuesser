@@ -31,3 +31,5 @@ class GuessNumber(object):
               value: int
               ) -> GuessState:
         return self.manager.guess(value=value)
+    
+    def getGuessCount(self) -> int: return self.manager.getGuessCount()
